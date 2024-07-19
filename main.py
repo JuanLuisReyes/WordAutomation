@@ -24,18 +24,22 @@ def create_file(constantes, subject, student):
 def create_folders(project_file_path):
     os.mkdir(project_file_path)
 
+def create_scores_folder(scores_folder_path):
+    if not os.path.exists(scores_folder_path):
+        os.mkdir(scores_folder_path)
+
 if __name__ == "__main__":
     project_file_path = os.getcwd()
+    project_file_path = os.path.join(project_file_path, "Calificaciones")
+    create_scores_folder(project_file_path)
     doc = DocxTemplate("scores_template.docx")
     maestro_sheet = pd.read_excel(io="students_scores.xlsx", sheet_name="Maestro")
 
     for index, subject in maestro_sheet.iterrows():
-        create_folders(os.path.join(project_file_path,"Calificaciones", subject["Materia"]))
+        create_folders(os.path.join(project_file_path, subject["Materia"]))
         
         students_info = pd.read_excel(io="students_scores.xlsx", sheet_name=subject["Materia"])
 
         for index, student in students_info.iterrows():
             constantes = create_dictionary(subject, student)
             create_file(constantes, subject, student)
-
-    
