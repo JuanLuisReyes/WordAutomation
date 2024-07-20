@@ -2,6 +2,8 @@ from docxtpl import DocxTemplate
 from datetime import datetime
 import pandas as pd
 import os
+import smtplib
+from email.message import EmailMessage
 
 def create_dictionary(subject, student):
     '''Creates a dictionary based on a list of students and its respective teacher information
@@ -46,7 +48,18 @@ def create_folders(project_file_path):
     if not os.path.exists(project_file_path):
         os.mkdir(project_file_path)
 
+def send_email(text, sender, receiver):
+
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s.starttls()
+    s.login(sender, "khhy drjh swgz hkwn")
+    s.sendmail(sender, receiver, "This is a test email")
+
 if __name__ == "__main__":
+    email_text_path = os.path.join(os.getcwd(), "email_text.txt")
+    subject = "Calificaciones | Python automation"
+    sender = "djjuanluis14@gmail.com"
+    receiver = "juanluis.reyes014@gmail.com"
     project_file_path = os.getcwd()
     project_file_path = os.path.join(project_file_path, "Calificaciones")
     create_folders(project_file_path)
@@ -61,3 +74,5 @@ if __name__ == "__main__":
         for index, student in students_info.iterrows():
             constantes = create_dictionary(subject, student)
             create_file(constantes, subject, student)
+            send_email(email_text_path, sender, receiver)
+
